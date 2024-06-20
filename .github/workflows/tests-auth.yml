@@ -1,7 +1,14 @@
 name: tests-auth
 
+# if there's a pull request
+# a pr get reoponese or we make an update to an existing PR
+# and the file's changed are inside the off directory
+# so if anything in side the directory gets changes
+# it runs the following job
 on:  
-  pull_request
+  pull_request:
+    paths:
+      - "auth/**"
 jobs:
   build:
     runs-on: ubuntu-latest
