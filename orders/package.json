@@ -5,7 +5,7 @@
     "main": "index.js",
     "scripts": {
         "start": "ts-node-dev --poll src/index.ts",
-        "test": "jest --watchAll --no-cache",
+        "test": "jest --watchAll --no-cache --coverage",
         "test:ci": "jest"
     },
     "jest": {
@@ -13,6 +13,16 @@
         "testEnvironment": "node",
         "setupFilesAfterEnv": [
             "./src/test/setup.ts"
+        ],
+        "collectCoverage": true,
+        "coverageDirectory": "coverage",
+        "coverageReporters": [
+            "text",
+            "lcov"
+        ],
+        "coveragePathIgnorePatterns": [
+            "/node_modules/",
+            "/dist/"
         ]
     },
     "keywords": [],
