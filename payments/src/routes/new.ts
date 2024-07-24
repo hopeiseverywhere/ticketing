@@ -24,7 +24,7 @@ router.post(
     async (req: Request, res: Response) => {
         const { token, orderId } = req.body;
         // console.log("Received orderId:", orderId);
-        // console.log(token);
+        // console.log("Token: ",token);
         const order = await Order.findById(orderId);
 
         if (!order) {
@@ -39,7 +39,7 @@ router.post(
         const charge = await stripe.charges.create({
             currency: "usd",
             amount: order.price * 100,
-            source: token.id,
+            source: token,
         });
         
         const payment = Payment.build({

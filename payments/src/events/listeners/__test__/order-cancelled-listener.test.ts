@@ -52,3 +52,13 @@ it("Acknowledeges the message after updating the replicated order object", async
 
     expect(msg.ack).toHaveBeenCalled();
 });
+
+it("throws an error if the order is not found", async () => {
+    const { listener, data, msg } = await setup();
+    
+    // Modify the data to have an incorrect order id
+    data.id = new mongoose.Types.ObjectId().toHexString();
+    
+    await expect(listener.onMessage(data, msg)).rejects.toThrow('Order not found');
+    expect(msg.ack).not.toHaveBeenCalled();
+});

@@ -1,10 +1,11 @@
 import mongoose from "mongoose";
 import request from "supertest";
 import { app } from "../../app";
-import { Order } from "../../models/order";
+import { Order, OrderAttrs } from "../../models/order";
 import { OrderStatus } from "@fran-tickets/common";
 import { stripe } from "../../stripe";
-import { Payment } from "../../models/payment";
+import { Payment, PaymentAttrs } from "../../models/payment";
+
 
 it("returns a 404 when purchasing an order that does not exist", async () => {
     await request(app)
@@ -16,6 +17,36 @@ it("returns a 404 when purchasing an order that does not exist", async () => {
         })
         .expect(404);
 });
+
+// it("creates a payment with Payment.build()", () => {
+//     const attrs: PaymentAttrs = {
+//         orderId: new mongoose.Types.ObjectId().toHexString(),
+//         stripeId: "stripe_test_id",
+//     };
+
+//     const payment = Payment.build(attrs);
+
+//     expect(payment.orderId).toEqual(attrs.orderId);
+//     expect(payment.stripeId).toEqual(attrs.stripeId);
+// });
+
+// it("creates an order with Order.build()", () => {
+//     const attrs: OrderAttrs = {
+//         id: new mongoose.Types.ObjectId().toHexString(),
+//         status: OrderStatus.Created,
+//         userId: "testuser",
+//         price: 20,
+//         version: 0,
+//     };
+
+//     const order = Order.build(attrs);
+
+//     expect(order.id).toEqual(attrs.id);
+//     expect(order.status).toEqual(attrs.status);
+//     expect(order.userId).toEqual(attrs.userId);
+//     expect(order.price).toEqual(attrs.price);
+//     expect(order.version).toEqual(attrs.version);
+// });
 
 it("returns a 401 when purchasing an order that doesn't belong to the user", async () => {
     const order = Order.build({

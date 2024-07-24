@@ -46,4 +46,4 @@ const Payment = mongoose.model<PaymentDoc, PaymentModel>(
     paymentSchema
 );
 
-export { Payment };
+export { Payment, PaymentAttrs };
