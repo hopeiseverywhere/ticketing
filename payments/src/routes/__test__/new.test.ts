@@ -6,7 +6,6 @@ import { OrderStatus } from "@fran-tickets/common";
 import { stripe } from "../../stripe";
 import { Payment, PaymentAttrs } from "../../models/payment";
 
-
 it("returns a 404 when purchasing an order that does not exist", async () => {
     await request(app)
         .post("/api/payments")
@@ -18,35 +17,34 @@ it("returns a 404 when purchasing an order that does not exist", async () => {
         .expect(404);
 });
 
-// it("creates a payment with Payment.build()", () => {
-//     const attrs: PaymentAttrs = {
-//         orderId: new mongoose.Types.ObjectId().toHexString(),
-//         stripeId: "stripe_test_id",
-//     };
+it("converts _id to id when toJSON is called for Payment", async () => {
+    const payment = Payment.build({
+        orderId: new mongoose.Types.ObjectId().toHexString(),
+        stripeId: "stripe_test_id",
+    });
 
-//     const payment = Payment.build(attrs);
+    await payment.save();
+    const paymentJSON = payment.toJSON();
 
-//     expect(payment.orderId).toEqual(attrs.orderId);
-//     expect(payment.stripeId).toEqual(attrs.stripeId);
-// });
+    expect(paymentJSON.id).toBeDefined();
+    expect(paymentJSON._id).toBeUndefined();
+});
+it("converts _id to id when toJSON is called for Order", async () => {
+    const order = Order.build({
+        id: new mongoose.Types.ObjectId().toHexString(),
+        status: OrderStatus.Created,
+        userId: "testuser",
+        price: 20,
+        version: 0,
+    });
 
-// it("creates an order with Order.build()", () => {
-//     const attrs: OrderAttrs = {
-//         id: new mongoose.Types.ObjectId().toHexString(),
-//         status: OrderStatus.Created,
-//         userId: "testuser",
-//         price: 20,
-//         version: 0,
-//     };
+    await order.save();
+    const orderJSON = order.toJSON();
 
-//     const order = Order.build(attrs);
+    expect(orderJSON.id).toBeDefined();
+    expect(orderJSON._id).toBeUndefined();
+});
 
-//     expect(order.id).toEqual(attrs.id);
-//     expect(order.status).toEqual(attrs.status);
-//     expect(order.userId).toEqual(attrs.userId);
-//     expect(order.price).toEqual(attrs.price);
-//     expect(order.version).toEqual(attrs.version);
-// });
 
 it("returns a 401 when purchasing an order that doesn't belong to the user", async () => {
     const order = Order.build({
